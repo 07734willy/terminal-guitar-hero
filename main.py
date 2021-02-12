@@ -14,32 +14,38 @@ class Game:
         self.difficulty = difficulty
 
         self.points = 0
-        self.lineno = 0
         self.duration = 20
-        self.strings = 4
+        self.columns = 4
         self.num_lines_visible = 10
         self.lives = 3
         
 
         self.board = self.generate_empty_board()
+        self.clear_keys()
+
+    def clear_keys(self):
+        self.keys = [False]*self.columns
 
     def generate_empty_board(self):
         # generates upcoming notes, as 2D list
-        blank_lines = [[False]*self.strings for _ in range(self.num_lines_visible)] 
-        #board = [self.generate_notes() for _ in range(self.duration)]
-        
-        return blank_lines #+ board
+        blank_lines = [[False] * self.columns for _ in range(self.num_lines_visible)] 
+
+        return blank_lines
     
     def update_board(self):
         del self.board[0]
         self.board.append(self.generate_notes())
+   
+    @property
+    def current_line(self):
+        return self.board[0]
     
 
     def generate_notes(self):
         # generates a single row of board
         options = (0,)*3 + (1,)*1 + (2,)*1
         note_count = choice(options) 
-        blank_count = self.strings - note_count 
+        blank_count = self.columns - note_count 
                 
         notes = [False]*blank_count + [True]*note_count
 
@@ -49,6 +55,14 @@ class Game:
                 
     def get_keys(self):
         # user input
+        ch = input()
+        try:
+            key_index = ["asdf".index(ch.lower())]
+            if not self.current_line[key_index]:
+                self.lives -= 1
+            self.keys[key_index] = True
+        except:
+            pass
         
 
     def format_line(self, line):
@@ -65,8 +79,7 @@ class Game:
     def format_board(self):
         # formats just incoming notes (as string)
         #TODO print only next n lines, pad with empty lines if neccessary
-        visible_lines = self.board[self.lineno:self.lineno + self.num_lines_visible]
-        return "\n".join(map(self.format_line, visible_lines[::-1]))
+        return "\n".join(map(self.format_line, self.board[::-1]))
         
     
     def format(self):
