@@ -22,9 +22,10 @@ class Game:
 
     def generate_board(self):
         # generates upcoming notes, as 2D list
-
+        blank_lines = [[False]*self.strings for _ in range(self.num_lines_visible)] 
         board = [self.generate_notes() for _ in range(self.duration)]
-        return board
+        
+        return blank_lines + board
     
     def generate_notes(self):
         # generates a single row of board
