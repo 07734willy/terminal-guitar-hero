@@ -17,16 +17,22 @@ class Game:
         self.duration = 20
         self.strings = 4
         self.num_lines_visible = 10
+        self.lives = 3
 
-        self.board = self.generate_board()
+        self.board = self.generate_empty_board()
 
-    def generate_board(self):
+    def generate_empty_board(self):
         # generates upcoming notes, as 2D list
         blank_lines = [[False]*self.strings for _ in range(self.num_lines_visible)] 
-        board = [self.generate_notes() for _ in range(self.duration)]
+        #board = [self.generate_notes() for _ in range(self.duration)]
         
-        return blank_lines + board
+        return blank_lines #+ board
     
+    def update_board(self):
+        del self.board[0]
+        self.board.append(self.generate_notes())
+    
+
     def generate_notes(self):
         # generates a single row of board
         options = (0,)*3 + (1,)*1 + (2,)*1
@@ -39,10 +45,6 @@ class Game:
         return notes
                 
                 
-
-
-
-
     def get_keys(self):
         # user input
         ...
@@ -62,7 +64,7 @@ class Game:
         # formats just incoming notes (as string)
         #TODO print only next n lines, pad with empty lines if neccessary
         visible_lines = self.board[self.lineno:self.lineno + self.num_lines_visible]
-        return "\n".join(map(self.format_line, visible_lines))
+        return "\n".join(map(self.format_line, visible_lines[::-1]))
         
     
     def format(self):
@@ -81,7 +83,12 @@ class Game:
 
     def play(self):
         # play the game
-        ...
+        for _ in range(6):
+            print(self.format())
+            self.update_board()
+
+
+
 
 def main():
     
