@@ -1,4 +1,5 @@
 import curses
+import time
 from random import shuffle, choice
 from pprint import pprint
 
@@ -18,6 +19,7 @@ class Game:
         self.strings = 4
         self.num_lines_visible = 10
         self.lives = 3
+        
 
         self.board = self.generate_empty_board()
 
@@ -47,7 +49,7 @@ class Game:
                 
     def get_keys(self):
         # user input
-        ...
+        
 
     def format_line(self, line):
         formatted = []
@@ -72,20 +74,25 @@ class Game:
         formatted_keys = " ".join("ASDF") 
         formatted_hyps = "-" * 7
         formatted_board = self.format_board()
+        formatted_score = self.format_score()
 
-        result = f"{formatted_board}\n{formatted_hyps}\n{formatted_keys}"
+        result = f"{formatted_score}\n\n{formatted_board}\n{formatted_hyps}\n{formatted_keys}"
 
         return result
 
-    def display_score(self):
+    def format_score(self):
         # formats a screen that displays score
-        ...
+        return f"SCORE: {self.points}"
+        
 
     def play(self):
         # play the game
-        for _ in range(6):
+        while self.lives:
             print(self.format())
+            time.sleep(1)
             self.update_board()
+            self.points += 1
+
 
 
 
