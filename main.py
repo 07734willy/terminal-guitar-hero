@@ -23,9 +23,6 @@ class Game:
         self.board = self.generate_empty_board()
         self.clear_keys()
 
-    def clear_keys(self):
-        self.keys = [False]*self.columns
-
     def generate_empty_board(self):
         # generates upcoming notes, as 2D list
         blank_lines = [[False] * self.columns for _ in range(self.num_lines_visible)] 
@@ -64,6 +61,11 @@ class Game:
         except:
             pass
         
+    def clear_keys(self):
+        self.keys = [False]*self.columns
+
+    def check_keys(self):
+        return self.keys == self.current_line
 
     def format_line(self, line):
         formatted = []
@@ -88,14 +90,18 @@ class Game:
         formatted_hyps = "-" * 7
         formatted_board = self.format_board()
         formatted_score = self.format_score()
+        formatted_lives = self.format_lives()
 
-        result = f"{formatted_score}\n\n{formatted_board}\n{formatted_hyps}\n{formatted_keys}"
+        result = f"{formatted_score}\n\n{formatted_board}\n{formatted_hyps}\n{formatted_keys}\n\n{formatted_lives}"
 
         return result
 
     def format_score(self):
         # formats a screen that displays score
         return f"SCORE: {self.points}"
+    
+    def format_lives(self):
+        return f"LIVES: {self.lives}"
         
 
     def play(self):
@@ -103,6 +109,9 @@ class Game:
         while self.lives:
             print(self.format())
             time.sleep(1)
+            if not self.check_keys():
+                self.lives -= 1
+            self.clear_keys()
             self.update_board()
             self.points += 1
 
